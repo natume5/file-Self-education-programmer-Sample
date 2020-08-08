@@ -1,0 +1,320 @@
+docstringの表示・出力方法
+
+以下のように関数にdocstringを記述する。docstring自体の書き方は後述。
+
+def my_func():
+    """docstring-test
+    line1
+    line2
+    line3
+    """
+
+
+__doc__属性
+
+docstringは__doc__属性に文字列として格納されている。print()で出力できる。
+
+print(my_func.__doc__)
+# docstring-test
+#     line1
+#     line2
+#     line3
+#     
+
+print(type(my_func.__doc__))
+# <class 'str'>
+
+
+
+組み込み関数help()
+
+Jupyter Notebookやターミナルでの対話環境（pythonまたはpython3コマンドで起動するPythonインタプリタ）
+で組み込み関数help()に対象のオブジェクトを渡して実行するとそのdocstringが対話的ヘルプシステムで出力される。
+
+
+help(my_func)
+# Help on function my_func in module __main__:
+# 
+# my_func()
+#     docstring-test
+#     line1
+#     line2
+#     line3
+# 
+
+ターミナルでの対話型ヘルプシステムはqで終了できる。
+
+
+
+IDEやエディタでの表示
+
+IDEやエディタによってはdocstringの内容をショートカットキーなどで表示して確認できる。いくつか例を示す。
+
+Jupyter Notebook
+
+Jupyter Notebookでは対象の関数などにカーソルを合わせて
+shift + tabでツールチップにdocstringが表示される。
+さらにshiftを押したままtabを連打すると詳細表示、分割表示と表示方式が変化する。
+
+
+VS Code
+
+VS Codeではマウスポインタを対象の関数などに合わせるとツールチップにdocstringが表示される。
+カーソルを合わせてショートカットcommand + k, command + i（またはcontrol + k, control + i）でも表示できる。
+
+
+
+
+関数、クラスなどでのdocstringの基本的な書き方
+
+docstringの基本的な書き方を示す。引数や返り値などのスタイルは後述。
+
+定義の先頭にトリプルクォート（'''または"""）で囲んで文字列を記述するのが基本。
+
+def my_func():
+    """docstring-test
+    line1
+    line2
+    line3
+    """
+
+
+文字列であればいいので、複数行でなければトリプルクォートではなくシングルクォート'や
+ダブルクォート"でもdocstringとなる。ただし、一行であっても慣例的にトリプルクォートが使われることが多い。
+
+def my_func2():
+    'docstring-test'
+
+print(my_func2.__doc__)
+# docstring-test
+
+
+定義の先頭でないとdocstringとならない。文字列の前に式などが記述されているとダメ。
+
+def my_func_error():
+    a = 100
+    """docstring-test
+    line1
+    line2
+    line3
+    """
+
+print(my_func_error.__doc__)
+# None
+
+
+クラスでも同様。定義の先頭に文字列を記述する。
+
+class MyClass:
+    """docstring-test
+    line1
+    line2
+    line3
+    """
+
+print(MyClass.__doc__)
+# docstring-test
+#     line1
+#     line2
+#     line3
+#     
+
+
+
+doctestによるテスト
+
+docstringの中に入出力例を書くと、標準ライブラリのdoctestモジュールを使ってテストを実行することができる。
+
+
+簡単なサンプルは以下の通り。
+
+def add(a, b):
+    '''
+    >>> add(1, 2)
+    3
+    >>> add(5, 10)
+    15
+    '''
+
+    return a + b
+
+
+
+
+引数や返り値などの書き方のスタイル
+
+docstingの中には関数の引数や返り値の説明や型などを記述するが、
+書き方のフォーマットは特に統一されていない。
+
+
+代表的な3つのスタイルの例を示す。
+
+    reStructuredText（reST）スタイル
+    NumPyスタイル
+    Googleスタイル
+
+読む人が理解できるスタイルであれば神経質になる必要はないと思うが、
+所属組織やプロジェクトのコーディング規約がなければこれらのスタイルを参考にするといいだろう。
+
+代表的なスタイルはドキュメント化やIDEやエディタでの補助機能に対応しているという利点もある。
+
+reStructuredTextスタイルだけでなく、
+NumPyスタイルとGoogleスタイルのdocstringもSphinxを使って
+ドキュメントを自動的に生成（html化）することが可能。
+ 
+
+IDEやエディタ（およびプラグイン）によっては対応しているスタイルであれば
+型のヒントの表示やエラーチェックをしてくれるものもある。
+
+例えばPyhtonの統合開発環境であるPyCharmでは3つすべてのスタイルに対応している。
+
+また、Python3.0以降では関数アノテーション（Function Annotations）という仕組みによって、
+関数の引数や返り値にアノテーション（注釈）を記述することができる。
+
+
+reStructuredText（reST）スタイル
+
+def func_rest(param1, param2):
+    """Summary line.
+
+    :param param1: Description of param1
+    :type param1: int
+    :param param2: Description of param2
+    :type param2: str
+    :returns: Description of return value
+    :rtype: bool
+    """
+    return True
+
+reSTスタイルはサードパーティライブラリRequestsなどで採用されている。以下が実際のコード。
+
+def add_dict_to_cookiejar(cj, cookie_dict):
+    """Returns a CookieJar from a key/value dictionary.
+
+    :param cj: CookieJar to insert cookies into.
+    :param cookie_dict: Dict of key/values to insert into CookieJar.
+    :rtype: CookieJar
+    """
+
+    return cookiejar_from_dict(cookie_dict, cj)
+
+
+
+
+NumPyスタイル
+
+numpydocというNumPyのドキュメント用のSphinx拡張機能に対応したスタイル。
+
+def func_numpy(param1, param2):
+    """Summary line.
+
+    Extended description of function.
+
+    Parameters
+    ----------
+    param1 : int
+        Description of param1
+    param2 : str
+        Description of param2
+
+    Returns
+    -------
+    bool
+        Description of return value
+    """
+    return True
+
+NumPyのほかpandasでも使われている。pandasの実際のコード例は以下の通り。
+
+def safe_sort(values, labels=None, na_sentinel=-1, assume_unique=False):
+    """
+    Sort ``values`` and reorder corresponding ``labels``.
+    ``values`` should be unique if ``labels`` is not None.
+    Safe for use with mixed types (int, str), orders ints before strs.
+
+    .. versionadded:: 0.19.0
+
+    Parameters
+    ----------
+    values : list-like
+        Sequence; must be unique if ``labels`` is not None.
+    labels : list_like
+        Indices to ``values``. All out of bound indices are treated as
+        "not found" and will be masked with ``na_sentinel``.
+    na_sentinel : int, default -1
+        Value in ``labels`` to mark "not found".
+        Ignored when ``labels`` is None.
+    assume_unique : bool, default False
+        When True, ``values`` are assumed to be unique, which can speed up
+        the calculation. Ignored when ``labels`` is None.
+
+    Returns
+    -------
+    ordered : ndarray
+        Sorted ``values``
+    new_labels : ndarray
+        Reordered ``labels``; returned when ``labels`` is not None.
+
+    Raises
+    ------
+    TypeError
+        * If ``values`` is not list-like or if ``labels`` is neither None
+        nor list-like
+        * If ``values`` cannot be sorted
+    ValueError
+        * If ``labels`` is not None and ``values`` contain duplicates.
+    """
+
+
+
+Googleスタイル
+
+GoogleのPythonスタイルガイドの中で定められているdocstringのスタイル。
+
+def func_google(param1, param2):
+    """Summary line.
+
+    Extended description of function.
+
+    Args:
+        param1 (int): Description of param1
+        param2 (str): Description of param2
+
+    Returns:
+        bool: Description of return value
+
+    """
+    return True
+
+
+TensorFlowの実際のコード例は以下の通り。
+
+def broadcast_dynamic_shape(shape_x, shape_y):
+  """Returns the broadcasted dynamic shape between `shape_x` and `shape_y`.
+
+  Args:
+    shape_x: A rank 1 integer `Tensor`, representing the shape of x.
+    shape_y: A rank 1 integer `Tensor`, representing the shape of y.
+
+  Returns:
+    A rank 1 integer `Tensor` representing the broadcasted shape.
+  """
+  return gen_array_ops.broadcast_args(shape_x, shape_y)
+
+
+
+
+関数アノテーション
+
+Python3.0以降では関数アノテーション（Function Annotations）という仕組みによって、
+関数の引数や返り値にアノテーション（注釈）となる式を記述することができる。
+
+def func_annotations_type(x: str, y: int) -> str:
+    return x * y
+
+関数アノテーションは単なる注釈なので、
+例えば上の例のように型を記述した場合でも実行時にチェックされたりはしないが、
+IDEやエディタによってはその情報をもとに処理を行うものもある。
+
+関数アノテーションとdocstringは二者択一ではなく、型は関数アノテーション、
+詳しい説明文はdocstringというように併用して記述する例が多い。

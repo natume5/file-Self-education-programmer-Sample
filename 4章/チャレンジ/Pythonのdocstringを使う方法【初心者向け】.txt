@@ -1,0 +1,109 @@
+docstringとは
+
+docstringとは、関数やクラスに対する説明文のことです。実際に表示して確認してみましょう。
+パソコンがMacの場合はターミナル、Windowsの場合はコマンドプロンプトから「python」と入力し、
+Pythonの対話型インタプリタを起動します。
+
+なお、事前に Python のインストールが必要です。起動したら、以下のように入力します。
+
+ print(range.__doc__)
+
+実行結果は以下のようになります。range関数の説明文が表示されています。
+
+range(stop) -> range object
+range(start, stop[, step]) -> range object
+
+Return an object that produces a sequence of integers from start (inclusive)
+to stop (exclusive) by step. range(i, j) produces i, i+1, i+2, ..., j-1.
+start defaults to 0, and stop is omitted! range(4) produces 0, 1, 2, 3.
+These are exactly the valid indices for a list of 4 elements.
+When step is given, it specifies the increment (or decrement).
+
+このような説明文は、自分で作った関数やクラスにも書くことができます。
+
+
+
+docstringの書き方
+
+docstringの書き方は以下のとおりです。最初に関数に書く場合の例です。
+
+def my_function1():
+    """my_function1の説明文
+    説明文2行目
+    説明文3行目
+    説明文4行目
+    """
+
+クラスに書く場合も同様です。
+
+class MyClass1:
+    """MyClass1の説明文
+    説明文2行目
+    説明文3行目
+    説明文4行目
+    """
+
+説明文は関数名のすぐ下に書くようにします。間に変数などを定義すると docstring として認識されなくなります。
+また docstring は一般的に「”””」または「”’」で囲って記載ます。複数行記載することができます。
+
+説明文は以下のどちらかの方法で表示することができます。開発環境によっては
+ショートカットキーが用意されている場合もあります。
+
+print(関数名.__doc__)
+help(関数名)
+
+なお、説明文は自由に書くことも出来ますが、いくつかフォーマットが存在しています。
+参考にしてみると良いでしょう。
+
+Googleスタイル
+
+その他、reStructuredTextスタイル、NumPyスタイルなどがあります。
+
+
+
+
+実際に書いてみよう
+
+今回のサンプルプログラムではmy_function1という関数に説明文を書いています。
+
+def my_function1():
+    """my_function1の説明文
+    説明文2行目
+    説明文3行目
+    説明文4行目
+    """
+
+先の range 関数の例と同様、以下のように入力することで説明文を表示できます。
+
+print(my_function1.__doc__)
+
+実行結果は以下のようになります。
+
+my_function1の説明文
+    説明文1行目
+    説明文2行目
+    説明文3行目
+
+次にhelpを使って表示してみましょう。
+
+help(MyClass)
+
+実行結果は以下のようになります。
+
+Help on class MyClass in module __main__:
+
+class MyClass(builtins.object)
+ |  docstring-test
+ |  line1
+ |  line2
+ |  line3
+ |  
+ |  Data descriptors defined here:
+ |  
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |  
+ |  __weakref__
+ |      list of weak references to the object (if defined)
+
+

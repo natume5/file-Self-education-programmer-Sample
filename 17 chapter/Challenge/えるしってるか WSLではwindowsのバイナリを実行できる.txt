@@ -1,0 +1,40 @@
+windowsユーザーにとって悩ましいのは、多くのOSSのインストールや実行はシェルスクリプトで書かれていることです。
+
+せっかくcondaやCUDAによってOS間の開発環境の差異が少なくなっているのにこれは辛い。
+WSLがあるじゃないか、と思うでしょうが、
+
+WSLではGPUがサポートされていないため、CUDAを使ったりした高速な学習等がこのままではできません。
+どうすれば。。。
+
+という方のために朗報です。
+
+実は、WSL上ではwindowsのバイナリを実行することができるのです。
+
+
+
+CUDA対応したpythonコードをWSL上から実行する、
+これはconda envをactivateして呼び出したWSL上でwindowsのバイナリを呼ぶことで実現できます。
+な、なんだってー
+
+
+
+コマンドプロンプトを開いたら、wslと打ちます。するとWSLのシェルが立ち上がるので、
+ vi .bashrcして以下を追記しましょう:
+
+alias conda="conda.exe"
+alias python="python.exe"
+alias ipython="ipython.exe"
+alias nosetests="nosetests.exe"
+alias pip="pip.exe"
+
+cd /mnt/c/Users/user_name
+
+condaとかpythonにwindowsバイナリのエイリアスを作っています。
+あと、最後にwindows上のホームフォルダに移動すると便利でしょう。
+
+
+
+これで、OSSでのインストラクションやpythonコード実行に使われているシェルスクリプトを実行しながら、
+実際に動かされるpythonはwindows上の実行環境であり、gpuやCUDAを利用するということが可能になるのでした。
+
+すごいわ、WSL

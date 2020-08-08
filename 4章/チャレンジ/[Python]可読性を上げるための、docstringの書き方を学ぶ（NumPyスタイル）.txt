@@ -1,0 +1,548 @@
+そもそもdocstringって？
+
+    Pythonの関数だったりクラスだったりに記述するコメントです。
+    JSDocだったりのPython版です。
+    書き方は、最初結構他の言語と違うな・・という印象を受けました。
+
+
+
+docstring書くと何が嬉しいの？
+後で見直したときに、すぐ内容が把握できるよ
+
+    Guido の重要な洞察のひとつに、コードは書くよりも読まれることの方が多い、というものがあります。
+
+最初は少し時間がかかっても、書いておくと後でコードを読み直した時の負担が減ります。
+
+
+
+関数などを扱う際に、内容を見たりできるよ
+
+jupyter などであれば、nbextentionsでhinterlandを有効化すると、関数を呼び出す際に表示してくれます。
+
+さらに、その状態でShiftとTABを何度か押すと詳細表示したり、
+画面分割して下にdocstringを表示して見ながら作業ができます。
+
+別途使っているsublimetextなどでも、プラグイン設定後に関数呼び出し時に
+docstringが表示されるようにしています。（プラグインに依存？）
+
+ほぼ使ったことはないですが、PyCharmなどでも表示してくれるはず。
+
+
+
+sphinx などでドキュメント出力できるよ
+
+といっても、まだ使ったことはないので詳細は割愛。
+
+世の中的には、Python公式ドキュメントしかり、NumPyドキュメントだったり、
+pandasだったりDjangoだったり広範囲に使われている印象です
+
+
+
+書くべき？書かないべき？
+
+Googleの資料だったり、PEPなどでも基本的には書くのが推奨されているので、
+基本的に仕事のDjangoプロジェクトなどでは自身で書いているコードに関してはほぼ全ての関数などで書いています。
+2年くらい書き続けた感じでは、やはりあった方が長期的には効率的に感じており、書くべきだとは思います。
+
+逆に、jupyterの使い捨てノートなどは書かないことが多いです。
+（仕事で今日中に集計結果が欲しいという依頼があったりと、ありますよね）
+
+”生産性”とは何か。私の場合、分析は1回しか行いません（異なるアイデアのテストやデバッギングは別です）。
+
+私にとって”高い生産性”は”結果を出すまでにかかった時間”を意味します。
+
+
+
+書き方
+
+この記事では、NumPyスタイルで話を進めます。
+
+
+
+なぜNumPyスタイル？
+
+    sphinx対応的に、書くとしたらNumPyかGoogleのスタイルどちらかがいいかな、という印象です。
+    プロジェクトでどちらを使うか好きな方を決めて、統一すればどちらでもいいと思われます。
+
+    スタイルのあいだの選択は大部分が美的感覚のものですが、２つのスタイルは混用するべきではありません。
+    ご自身のプロジェクトでひとつのスタイルを選び、一貫させましょう。
+
+私は（仕事などでは）以下の理由からNumPy側を採用しています。
+
+    NumPy自体、とてもよく使われている。
+    他のメジャーな、よく使うライブラリでもNumPyのものに合わせている（Pandas、scipyなどなど）。
+    書籍でもぼちぼちNumPyスタイルに合わせた / 似た 記述のものを見かけた。
+
+機械学習などがメインのプロジェクトであれば、Tensorflow、Keras、scikit-learnなどの
+とてもメジャーなGoogle製のライブラリも多いため、Googleのスタイルに合わせたりもいいと思います。
+(好きな方で)
+
+
+
+NumPyスタイルでの書き方
+
+※この記事ではすべては扱いません。詳細などはNumPyのA Guide to NumPy/SciPy Documentationだったりを
+ご確認ください。
+
+※以下の理由から日本語を絡めて記載しています。OSS的なものなど、
+英語で書いた方が好ましいケースも多々あると思います。そのあたり適宜調整してください。
+
+    仕事では日本語がしゃべれるメンバーのみで普段仕事しており、外部にコードを公開する予定はない。
+    無理に英語で書いて、誤った英語で誤解を与える方がリスクが高いと感じる。
+
+英語を話さない国出身の Python プログラマの方々へ：
+あなたのコードが、自分の言葉を話さない人に 120% 読まれないと確信していなければ、
+コメントを英語で書くようにお願いします。
+はじめに — pep8-ja 1.0 ドキュメント
+
+コードと矛盾するコメントは、コメントしないことよりタチが悪いです。
+はじめに — pep8-ja 1.0 ドキュメント
+
+
+
+基本の書き方
+
+    関数やクラス定義の直下などに、その関数がどういったものなのかといったものを書きます。
+
+    他の言語だと関数の外に書いたりすることが多いと思いますが、内部に書きます。
+
+    docstringの開始と終了を、ダブルクォート3個で囲んで書きます。
+
+    ダブルクォートの直後に書くか、1行改行を入れるかどうかですが、
+    Pandasなどを見ているとNumPyスタイルの場合は改行を入れるケースが多いかな？という印象です。
+    このあたりはどちらでも大丈夫かもしれません。
+
+
+def get_fruit_price():
+    """
+    果物の値段を取得する。
+    """
+
+    pass
+
+
+なお、Pythonを触り始めた初期のころに、各主要ライブラリのDocstringの充実具合にびっくりしたことがあります。
+この辺りも、Pythonコミュニティでドキュメントを大事にしているんだなあ・・
+と感じた覚えがあります。(NumPyだったりPandasだったり・・
+jupyter上から直接色々見えるので、是非確認してみてください)
+
+補足 : PEP8などで、1行辺り半角72文字（全角で36文字相当程度）
+に収めるようにと記載があります。あまり長くなると見づらいので、適宜改行を入れてください。
+
+    すべての行の長さを、最大79文字までに制限しましょう。
+
+    (docstring やコメントのように) 構造に関する制約が少ないテキストのブロックについては、
+    1行72文字までに制限すべきです。
+    はじめに — pep8-ja 1.0 ドキュメント
+
+
+
+引数の書き方
+
+    JSDocの@param的な個所に該当します。
+    まずParametersと記載し、ハイフンを並べ、その下に各引数説明を書いていきます。
+    引数名 : 型 の形式で記載し、改行してインデントを加えた状態で引数内容を記載します。
+
+
+def get_fruit_price(fruit_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+    """
+    pass
+
+複数の引数を取る場合には以下のようになります。
+
+
+def get_fruit_price(fruit_id, location_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+    location_id : int
+        対象地域のマスタID。
+    """
+    pass
+
+
+
+返り値の書き方
+
+    引数のときのParametersという記述が、Returnsに代わります。
+
+    返り値内容との間にハイフンを設ける点や、型などの記述の仕方は引数と同じです。
+
+    返り値を返さない関数などでは省略されます。
+
+    返り値を変数に持たず、直接返すようなケースでは、
+    返り値の変数名は内容を表す分かりやすい名前でdocstringに書いておくといいと思います。
+
+
+def get_fruit_price(fruit_id, location_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+    location_id : int
+        対象地域のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+Pythonでは、複数の返却値を設定することができます。
+（機械学習関係でも、x_train, y_train, x_test, y_test 的な返却値の記載がよく出てきたりしますよね）
+
+その場合には引数の時と同様、下に追加していってください。
+（引数が多くても、キーワード引数の機能を使って書けるので気になりませんが、
+返り値はそうではなくあまり多くの返り値があるとミスしやすいので、
+件数はほどほどにしておくといいと思います。）
+
+
+def get_fruit_price(fruit_id, location_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+    location_id : int
+        対象地域のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+    consumption_tax : int
+        消費税値。
+    """
+    # ...関数内容省略。
+    return fruit_price, consumption_tax
+
+
+
+クラスの属性値の書き方
+
+    基本は、引数などと同じように、Attributesと記載して属性に関した記述を書きます。
+    コンストラクタの引数内容は、__init__関数側などに書きます。
+
+
+class Fruit(object):
+    """
+    果物の各属性値やヘルパー関数を保持する。
+
+    Attributes
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+    fruit_name : str
+        果物名。
+    price_dict : dict
+        キーに地域のID、値に該当する地域での値段を保持した辞書。
+    """
+
+    def __init__(self, fruit_id):
+        """
+        Parameters
+        ----------
+        fruit_id : int
+            対象の果物のマスタID。
+        """
+        self.fruit_id = fruit_id
+        self.fruit_name = self.get_fruit_name(fruit_id=fruit_id)
+        self.price_dict = self.get_price_dict(fruit_id=fruit_id)
+
+    def get_fruit_name(self, fruit_id):
+        # ...内容省略。
+        pass
+
+    def get_price_dict(self, fruit_id):
+        # ...内容省略。
+        pass
+
+
+
+    コンストラクタ側に、クラスの説明を書くかどうかですが、jupyterであれば、
+    コンストラクタ側は上記のように省略していても、以下のようにコンストラクタアクセス時に
+    自動で表示してくれるようです。
+
+apple = Fruit(fruit_id=1)
+
+※エディタによっては、コンストラクタ側に書いていないと表示されてかったりもするので、
+プロジェクトの環境などに合わせて、両方に書いたり、コンストラクタ側のみに書いたりなど調整してください。
+
+
+
+
+関連する要素に対するドキュメントの書き方
+
+    オプション的な要素で、必要だったら書くという類のものですが、
+    関連して参照して欲しいもの（関数）などあれば記載します。
+    See Also と記載し、左に要素名（関数名など）、コロンで区切って右に説明を記載します
+
+NumPy配列（ndarray）における記述をサンプルとして一部転載します。
+
+
+See Also
+--------
+array : Construct an array.
+zeros : Create an array, each element of which is zero.
+...
+
+
+
+def get_fruit_price(fruit_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+
+    See Also
+    --------
+    get_fruit_id_list : DBに保存されている果物のマスタIDのリストを取得する。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+
+
+特記事項の書き方
+
+こちらもオプション的な要素となります。Notesと記載してから内容を書いていきます。
+
+NumPyのndarrayのところを見てみると、以下のように書かれています。（一部抜粋）
+
+
+Notes
+-----
+There are two modes of creating an array using ``__new__``:
+
+1. If `buffer` is None, then only `shape`, `dtype`, and `order`
+   are used.
+2. If `buffer` is an object exposing the buffer interface, then
+   all keywords are interpreted.
+...
+
+
+def get_fruit_price(fruit_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+
+    Notes
+    -----
+    スイカは野菜側として扱われる。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+
+
+エラーが起きる条件の書き方
+
+    Raisesとして記載します。（オプション）
+
+    書いてあると、不正な値の場合にエラーとしているのか、0やNoneなどでエラー無く返されるのか
+    といったことが分かりやすくなります。
+
+    あと、テスト時にnoseのassert_raisesなどの関数を使う場合などに、テストを書きやすく感じます。
+
+    エラーのクラスを書いて、改行とインデントを加えてエラーが発生する条件を書きます。
+
+NumPyのasarray_chkfinite関数などを見ると、以下のように書いてあります。
+
+
+Raises
+------
+ValueError
+    Raises ValueError if `a` contains NaN (Not a Number) or Inf (Infinity).
+
+
+def get_fruit_price(fruit_id):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int
+        対象の果物のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+
+    Raises
+    ------
+    ValueError
+        存在しない果物のマスタIDが指定された場合。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+
+
+使い方例の書き方
+
+    Examplesと記載します。
+    Pythonのインタラクティブシェルのように、インプット行には >>> と記載して書いていきます。
+    アウトプットの部分には、行の先頭からアウトプット内容（返却値）を書きます。
+
+NumPyのsort関数では以下のように書いてあります。
+
+
+Examples
+--------
+>>> a = np.array([[1,4],[3,1]])
+>>> np.sort(a)                # sort along the last axis
+array([[1, 4],
+       [1, 3]])
+>>> np.sort(a, axis=None)     # sort the flattened array
+array([1, 1, 3, 4])
+>>> np.sort(a, axis=0)        # sort along the first axis
+array([[1, 1],
+       [3, 4]])
+
+
+
+
+引数がデフォルト値を取る場合
+
+    型の後にコンマを入れて、default 1 といったような記述を書きます。
+
+
+def get_fruit_price(fruit_id=1):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int, default 1
+        対象の果物のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+
+
+複数の型を許容する場合
+
+    型の個所にorを挟んで複数書いていきます。
+
+def get_fruit_price(fruit_id=None):
+    """
+    果物の値段を取得する。
+
+    Parameters
+    ----------
+    fruit_id : int or None, default None
+        対象の果物のマスタID。
+
+    Returns
+    -------
+    fruit_price : int
+        対象の果物の値段。IDに0が指定された場合は0となる。
+    """
+    # ...関数内容省略。
+    return fruit_price
+
+
+配列形式（list, tuple, ndarrayなど）のものであれば色々許容するのであれば、
+array-likeという表記が使われることが結構あります。
+
+
+def get_fruit_price_list(fruit_id_arr):
+    """
+    果物の値段のリストを取得する。
+
+    Parameters
+    ----------
+    fruit_id_arr : array-like
+        対象の果物のマスタIDを格納した配列。
+
+    Returns
+    -------
+    fruit_price_arr : array-like
+        果物の値段を格納した配列。
+    """
+    # ...関数内容省略。
+    return fruit_price_arr
+
+
+
+
+リストなどの中身を明記する書き方
+
+    たとえば、文字列を格納するリストなどの場合、list of str、list of tuple
+    といった形で型の個所が記載されることがよくあります。
+   （他にもlist of intだったり、list of dictsだったり様々）
+
+
+def get_fruit_price_list(fruit_id_list):
+    """
+    果物の値段のリストを取得する。
+
+    Parameters
+    ----------
+    fruit_id_arr : list of int
+        対象の果物のマスタIDを格納したリスト。
+
+    Returns
+    -------
+    fruit_price_list : list of int
+        果物の値段を格納したリスト。
+    """
+    # ...関数内容省略。
+    return fruit_price_list
+
+
+
+
+その他
+
+他にも、Referencesだったり、関数に応じて分かりやすいようにマークダウンのリスト的な表記
+（許容できる定数のリストだったり）をしていてたり、様々です。
+詳しくはNumPyの資料や、各ライブラリのdocsringなど参考にしてください。
+

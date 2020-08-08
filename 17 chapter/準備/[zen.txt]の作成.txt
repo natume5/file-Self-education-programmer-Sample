@@ -1,0 +1,4 @@
+wslで/home/rnにzen.txtを作成。
+cd /home/rn/zen.txtで移動。
+そこでpython3 -c "import this" とコマンドを打ってTim Petersの詩を表示。
+表示されたThe Zen of Pythonを
